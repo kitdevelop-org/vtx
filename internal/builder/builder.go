@@ -59,8 +59,8 @@ func Build(cfg *config.VtxConfig) error {
 		return fmt.Errorf("error agregando manifest.json: %w", err)
 	}
 
-	// 6. Agregar binarios de .NET al ZIP
-	if err := addDirToZip(archive, publishDir, "bin"); err != nil {
+	// 6. Agregar binarios de .NET al ZIP (En la raíz, no en bin/)
+	if err := addDirToZip(archive, publishDir, ""); err != nil {
 		return fmt.Errorf("error agregando binarios: %w", err)
 	}
 

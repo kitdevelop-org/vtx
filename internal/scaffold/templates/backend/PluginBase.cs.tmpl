@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Veritix.Plugin.SDK;
 using Veritix.Plugin.SDK.Database;
+using Veritix.Plugin.SDK.Frontend;
 using Veritix.Plugin.{{.PluginId}}.Services;
 using Veritix.Plugin.{{.PluginId}}.Data;
 
@@ -17,6 +18,11 @@ public class {{.PluginId}}Plugin : PluginBase
     public override string Description => "Módulo de {{.DisplayName}} para Veritix ERP.";
     public override string Author => "{{.Author}}";
     public override string? Icon => "Box";
+
+    /// <summary>
+    /// Declaración del Micro-frontend para el Shell de Veritix.
+    /// </summary>
+    public override IPluginFrontend? Frontend => new InternalPluginFrontend();
 
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
@@ -44,5 +50,26 @@ public class {{.PluginId}}Plugin : PluginBase
         // Esto creará el esquema del plugin para el tenant
         await base.OnInstalledAsync(tenantId, ct);
     }
+
+    private class InternalPluginFrontend : IPluginFrontend
+    {
+        public string RemoteName => "vtx_plugin_{{.PluginIdLower}}";
+        public string ExposedModule => "./PluginApp";
+
+        // Rutas que el plugin registra en el React Router del Shell
+        public IReadOnlyList<string> Routes => ["/{{.PluginIdLower}}"];
+
+        // Elementos que aparecerán en el menú lateral del Shell
+        public IReadOnlyList<PluginNavItem> NavItems => [
+            new PluginNavItem 
+            { 
+                Label = "{{.DisplayName}}", 
+                Path = "/{{.PluginIdLower}}", 
+                Icon = "Box" 
+            }
+        ];
+    }
+}
+
 }
 
