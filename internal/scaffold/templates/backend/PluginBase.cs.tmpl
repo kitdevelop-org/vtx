@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Veritix.Plugin.SDK;
 using Veritix.Plugin.SDK.Database;
 using Veritix.Plugin.SDK.Frontend;
+using Veritix.Plugin.SDK.Licensing;
 using Veritix.Plugin.{{.PluginId}}.Services;
 using Veritix.Plugin.{{.PluginId}}.Data;
+{{if eq .LicenseType "Custom"}}using Veritix.Plugin.{{.PluginId}}.Licensing;{{end}}
 
 namespace Veritix.Plugin.{{.PluginId}};
 
@@ -23,6 +25,13 @@ public class {{.PluginId}}Plugin : PluginBase
     /// Declaración del Micro-frontend para el Shell de Veritix.
     /// </summary>
     public override IPluginFrontend? Frontend => new InternalPluginFrontend();
+
+    {{if eq .LicenseType "Custom"}}
+    /// <summary>
+    /// Lógica de licenciamiento personalizada (BYOL).
+    /// </summary>
+    public override IPluginLicenseValidator? LicenseValidator => new {{.PluginId}}LicenseValidator();
+    {{end}}
 
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {

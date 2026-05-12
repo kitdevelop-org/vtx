@@ -1,0 +1,27 @@
+using Veritix.Plugin.SDK.Licensing;
+
+namespace Veritix.Plugin.{{.PluginId}}.Licensing;
+
+public class {{.PluginId}}LicenseValidator : IPluginLicenseValidator
+{
+    public string PluginId => "{{.PluginId}}";
+
+    public Task<PluginLicenseResult> ValidateAsync(Guid tenantId, string licenseKey, CancellationToken ct = default)
+    {
+        // Lógica de licenciamiento BYOL (Bring Your Own License)
+        // Aquí deberías desencriptar/validar el licenseKey (ej. JWT, Firma RSA personalizada)
+        
+        if (string.IsNullOrWhiteSpace(licenseKey))
+        {
+            return Task.FromResult(PluginLicenseResult.Invalid("La llave de licencia está vacía."));
+        }
+
+        // Simulación: Validamos la estructura
+        if (licenseKey.StartsWith("{{.PluginId}}-"))
+        {
+            return Task.FromResult(PluginLicenseResult.Valid(DateTime.UtcNow.AddDays(30)));
+        }
+
+        return Task.FromResult(PluginLicenseResult.Invalid("Llave de licencia no reconocida por el proveedor."));
+    }
+}

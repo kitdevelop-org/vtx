@@ -3,17 +3,16 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/kitdevelop-org/vtx/internal/i18n"
 	"github.com/spf13/cobra"
 )
 
 var certCmd = &cobra.Command{
 	Use:   "cert",
-	Short: "Gestiona los certificados RSA para la firma de plugins",
 }
 
 var certStatusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "Muestra el estado actual del certificado del Publisher",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("📜 Certificado: KitDevelop Official")
 		fmt.Println("📅 Expiración: 2027-05-11")
@@ -23,7 +22,6 @@ var certStatusCmd = &cobra.Command{
 
 var certDownloadCmd = &cobra.Command{
 	Use:   "download",
-	Short: "Descarga el certificado del Publisher desde el CKM",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("⏳ Conectando con CKM (Client Key Management)...")
 		fmt.Println("✅ Certificado 'publisher.cert' descargado exitosamente.")
@@ -32,7 +30,6 @@ var certDownloadCmd = &cobra.Command{
 
 var certRenewCmd = &cobra.Command{
 	Use:   "renew",
-	Short: "Solicita la renovación del certificado RSA",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("⏳ Enviando solicitud de renovación a KitDevelop...")
 		fmt.Println("✅ Solicitud enviada. Pendiente de aprobación en NexusControlCenter.")
@@ -41,7 +38,6 @@ var certRenewCmd = &cobra.Command{
 
 var certSignCmd = &cobra.Command{
 	Use:   "sign [archivo.vtx]",
-	Short: "Firma digitalmente un paquete de plugin (.vtx) usando el certificado RSA",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		file := args[0]
@@ -52,6 +48,12 @@ var certSignCmd = &cobra.Command{
 }
 
 func init() {
+	certCmd.Short = i18n.T("cmd_cert_short")
+	certStatusCmd.Short = i18n.T("cmd_cert_status_short")
+	certDownloadCmd.Short = i18n.T("cmd_cert_download_short")
+	certRenewCmd.Short = i18n.T("cmd_cert_renew_short")
+	certSignCmd.Short = i18n.T("cmd_cert_sign_short")
+
 	rootCmd.AddCommand(certCmd)
 	certCmd.AddCommand(certStatusCmd)
 	certCmd.AddCommand(certDownloadCmd)

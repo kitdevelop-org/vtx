@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/huh"
+	"github.com/kitdevelop-org/vtx/internal/i18n"
 )
 
 type NewPluginAnswers struct {
@@ -13,6 +14,7 @@ type NewPluginAnswers struct {
 	HasContracts  bool
 	Country       string
 	Author        string
+	LicenseType   string // "Free", "Veritix", "Custom"
 }
 
 func RunNewWizard(defaultName string) (*NewPluginAnswers, error) {
@@ -23,7 +25,7 @@ func RunNewWizard(defaultName string) (*NewPluginAnswers, error) {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
-				Title("¿Cuál es el nombre del plugin?").
+				Title(i18n.T("wizard_name_title")).
 				Placeholder("Ej: Inventory, POS Retail").
 				Value(&answers.Name).
 				Validate(func(s string) error {
@@ -34,20 +36,29 @@ func RunNewWizard(defaultName string) (*NewPluginAnswers, error) {
 				}),
 
 			huh.NewInput().
-				Title("Plugin ID (PascalCase)").
+				Title(i18n.T("wizard_id_title")).
 				Placeholder("Ej: MyInventory").
 				Value(&answers.PluginId),
 
 			huh.NewConfirm().
-				Title("¿Incluir proyecto Frontend (ClientApp)?").
+				Title(i18n.T("wizard_frontend_title")).
 				Value(&answers.HasFrontend),
 
 			huh.NewConfirm().
-				Title("¿Deseas que este plugin sea utilizable como dependencia? (Crea proyecto .Contracts)").
+				Title(i18n.T("wizard_contracts_title")).
 				Value(&answers.HasContracts),
 
 			huh.NewSelect[string]().
-				Title("País Fiscal base").
+				Title(i18n.T("wizard_license_title")).
+				Options(
+					huh.NewOption(i18n.T("license_free"), "Free"),
+					huh.NewOption(i18n.T("license_veritix"), "Veritix"),
+					huh.NewOption(i18n.T("license_custom"), "Custom"),
+				).
+				Value(&answers.LicenseType),
+
+			huh.NewSelect[string]().
+				Title(i18n.T("wizard_country_title")).
 				Options(
 					huh.NewOption("República Dominicana (DO)", "DO"),
 					huh.NewOption("Colombia (CO)", "CO"),
@@ -57,7 +68,7 @@ func RunNewWizard(defaultName string) (*NewPluginAnswers, error) {
 				Value(&answers.Country),
 
 			huh.NewInput().
-				Title("Autor / Organización").
+				Title(i18n.T("wizard_author_title")).
 				Placeholder("Ej: KitDevelop").
 				Value(&answers.Author),
 		),

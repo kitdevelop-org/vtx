@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
+	"github.com/kitdevelop-org/vtx/internal/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -34,5 +35,6 @@ Carga automáticamente tu plugin local mediante Module Federation y mockea los s
 }
 
 func init() {
+	devCmd.Short = i18n.T("cmd_dev_short")
 	rootCmd.AddCommand(devCmd)
 }

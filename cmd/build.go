@@ -5,12 +5,13 @@ import (
 
 	"github.com/kitdevelop-org/vtx/internal/builder"
 	"github.com/kitdevelop-org/vtx/internal/config"
+	"github.com/kitdevelop-org/vtx/internal/i18n"
 	"github.com/spf13/cobra"
 )
 
 var buildCmd = &cobra.Command{
 	Use:   "build",
-	Short: "Compila y empaqueta el plugin en un archivo .vtx",
+	Short: i18n.T("cmd_build_short"),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.LoadConfig("vtx.config.json")
 		if err != nil {
@@ -28,5 +29,6 @@ var buildCmd = &cobra.Command{
 }
 
 func init() {
+	buildCmd.Short = i18n.T("cmd_build_short")
 	rootCmd.AddCommand(buildCmd)
 }

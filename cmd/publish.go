@@ -6,12 +6,13 @@ import (
 	"path/filepath"
 
 	"github.com/kitdevelop-org/vtx/internal/config"
+	"github.com/kitdevelop-org/vtx/internal/i18n"
 	"github.com/spf13/cobra"
 )
 
 var publishCmd = &cobra.Command{
 	Use:   "publish",
-	Short: "Sube el plugin firmado al Marketplace de Veritix",
+	Short: i18n.T("cmd_publish_short"),
 	Long: `vtx publish valida la firma digital del paquete .vtx y lo sube al
 Veritix Registry para que esté disponible para su instalación.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -43,5 +44,6 @@ Veritix Registry para que esté disponible para su instalación.`,
 }
 
 func init() {
+	publishCmd.Short = i18n.T("cmd_publish_short")
 	rootCmd.AddCommand(publishCmd)
 }

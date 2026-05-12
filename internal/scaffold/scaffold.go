@@ -22,6 +22,7 @@ type templateData struct {
 	Country        string
 	HasFrontend    bool
 	HasContracts   bool
+	LicenseType    string
 	BackendProject string
 	FrontendRoot   string
 	ItemGroup      string
@@ -38,6 +39,7 @@ func Generate(a *ui.NewPluginAnswers) error {
 		Country:       a.Country,
 		HasFrontend:   a.HasFrontend,
 		HasContracts:  a.HasContracts,
+		LicenseType:   a.LicenseType,
 		BackendProject: fmt.Sprintf("./Veritix.Plugin.%s/Veritix.Plugin.%s.csproj", a.PluginId, a.PluginId),
 		FrontendRoot:   fmt.Sprintf("./Veritix.Plugin.%s/ClientApp", a.PluginId),
 	}
@@ -51,6 +53,7 @@ func Generate(a *ui.NewPluginAnswers) error {
 		filepath.Join(pluginDir, "Controllers"),
 		filepath.Join(pluginDir, "Services"),
 		filepath.Join(pluginDir, "Data"),
+		filepath.Join(pluginDir, "Licensing"),
 	}
 
 	if a.HasContracts {
@@ -108,6 +111,10 @@ func Generate(a *ui.NewPluginAnswers) error {
 
 	if a.HasContracts {
 		backendFiles[filepath.Join(contractsDir, "I"+a.PluginId+"Capability.cs")] = "templates/backend/Capability.cs.tmpl"
+	}
+
+	if a.LicenseType == "Custom" {
+		backendFiles[filepath.Join(pluginDir, "Licensing", a.PluginId+"LicenseValidator.cs")] = "templates/backend/LicenseValidator.cs.tmpl"
 	}
 
 	for dest, tmpl := range backendFiles {
