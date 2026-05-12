@@ -10,6 +10,7 @@ type NewPluginAnswers struct {
 	Name          string
 	PluginId      string
 	HasFrontend   bool
+	HasContracts  bool
 	Country       string
 	Author        string
 }
@@ -40,6 +41,10 @@ func RunNewWizard(defaultName string) (*NewPluginAnswers, error) {
 			huh.NewConfirm().
 				Title("¿Incluir proyecto Frontend (ClientApp)?").
 				Value(&answers.HasFrontend),
+
+			huh.NewConfirm().
+				Title("¿Deseas que este plugin sea utilizable como dependencia? (Crea proyecto .Contracts)").
+				Value(&answers.HasContracts),
 
 			huh.NewSelect[string]().
 				Title("País Fiscal base").

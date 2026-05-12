@@ -9,11 +9,12 @@ import (
 )
 
 var (
-	flagName     string
-	flagId       string
-	flagFrontend bool
-	flagCountry  string
-	flagAuthor   string
+	flagName      string
+	flagId        string
+	flagFrontend  bool
+	flagContracts bool
+	flagCountry   string
+	flagAuthor    string
 )
 
 var newCmd = &cobra.Command{
@@ -27,11 +28,12 @@ var newCmd = &cobra.Command{
 		// Si se pasan flags, saltar el wizard
 		if flagName != "" && flagId != "" {
 			answers = &ui.NewPluginAnswers{
-				Name:        flagName,
-				PluginId:    flagId,
-				HasFrontend: flagFrontend,
-				Country:     flagCountry,
-				Author:      flagAuthor,
+				Name:         flagName,
+				PluginId:     flagId,
+				HasFrontend:  flagFrontend,
+				HasContracts: flagContracts,
+				Country:      flagCountry,
+				Author:       flagAuthor,
 			}
 		} else {
 			name := ""
@@ -60,6 +62,7 @@ func init() {
 	newCmd.Flags().StringVarP(&flagName, "name", "n", "", "Nombre del plugin")
 	newCmd.Flags().StringVarP(&flagId, "id", "i", "", "ID del plugin (PascalCase)")
 	newCmd.Flags().BoolVarP(&flagFrontend, "frontend", "f", true, "¿Incluir frontend?")
+	newCmd.Flags().BoolVarP(&flagContracts, "contracts", "x", true, "¿Crear proyecto de contratos?")
 	newCmd.Flags().StringVarP(&flagCountry, "country", "c", "GLOBAL", "País fiscal")
 	newCmd.Flags().StringVarP(&flagAuthor, "author", "a", "KitDevelop", "Autor/Organización")
 }

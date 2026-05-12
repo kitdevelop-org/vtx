@@ -21,6 +21,7 @@ type templateData struct {
 	Author         string
 	Country        string
 	HasFrontend    bool
+	HasContracts   bool
 	BackendProject string
 	FrontendRoot   string
 	ItemGroup      string
@@ -36,6 +37,7 @@ func Generate(a *ui.NewPluginAnswers) error {
 		Author:        a.Author,
 		Country:       a.Country,
 		HasFrontend:   a.HasFrontend,
+		HasContracts:  a.HasContracts,
 		BackendProject: fmt.Sprintf("./Veritix.Plugin.%s/Veritix.Plugin.%s.csproj", a.PluginId, a.PluginId),
 		FrontendRoot:   fmt.Sprintf("./Veritix.Plugin.%s/ClientApp", a.PluginId),
 	}
@@ -49,7 +51,10 @@ func Generate(a *ui.NewPluginAnswers) error {
 		filepath.Join(pluginDir, "Controllers"),
 		filepath.Join(pluginDir, "Services"),
 		filepath.Join(pluginDir, "Data"),
-		contractsDir,
+	}
+
+	if a.HasContracts {
+		dirs = append(dirs, contractsDir)
 	}
 
 	if a.HasFrontend {
@@ -62,24 +67,32 @@ func Generate(a *ui.NewPluginAnswers) error {
 		}
 	}
 
-	// 1. Generar Contracts .csproj
-	data.ItemGroup = ""
-	if err := render(filepath.Join(contractsDir, "Veritix.Plugin."+a.PluginId+".Contracts.csproj"), "templates/backend/csproj.tmpl", data); err != nil {
-		return err
+	// 1. Generar Contracts .csproj (Opcional)
+	if a.HasContracts {
+		data.ItemGroup = ""
+		if err := render(filepath.Join(contractsDir, "Veritix.Plugin."+a.PluginId+".Contracts.csproj"), "templates/backend/csproj.tmpl", data); err != nil {
+			return err
+		}
 	}
 
 	// 2. Generar Main Plugin .csproj
-	data.ItemGroup = fmt.Sprintf(`
-  <ItemGroup>
-    <ProjectReference Include="..\Veritix.Plugin.%s.Contracts\Veritix.Plugin.%s.Contracts.csproj" />
-  </ItemGroup>
+	itemGroup := `
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
-  </ItemGroup>`, a.PluginId, a.PluginId)
+  </ItemGroup>`
+
+	if a.HasContracts {
+		itemGroup = fmt.Sprintf(`
+  <ItemGroup>
+    <ProjectReference Include="..\Veritix.Plugin.%s.Contracts\Veritix.Plugin.%s.Contracts.csproj" />
+  </ItemGroup>`, a.PluginId, a.PluginId) + itemGroup
+	}
+
+	data.ItemGroup = itemGroup
 	if err := render(filepath.Join(pluginDir, "Veritix.Plugin."+a.PluginId+".csproj"), "templates/backend/csproj.tmpl", data); err != nil {
 		return err
 	}
@@ -88,9 +101,13 @@ func Generate(a *ui.NewPluginAnswers) error {
 	backendFiles := map[string]string{
 		filepath.Join(pluginDir, a.PluginId+"Plugin.cs"):            "templates/backend/PluginBase.cs.tmpl",
 		filepath.Join(pluginDir, "Controllers", a.PluginId+"Controller.cs"): "templates/backend/Controller.cs.tmpl",
-		filepath.Join(pluginDir, "Services", "I"+a.PluginId+"Service.cs"):   "templates/backend/Service.cs.tmpl", // Contiene interfaz y clase por simplicidad
+		filepath.Join(pluginDir, "Services", "I"+a.PluginId+"Service.cs"):   "templates/backend/Service.cs.tmpl",
 		filepath.Join(pluginDir, "Data", a.PluginId+"DbContext.cs"):         "templates/backend/DbContext.cs.tmpl",
 		filepath.Join(pluginDir, "Data", a.PluginId+"Migrator.cs"):          "templates/backend/Migrator.cs.tmpl",
+	}
+
+	if a.HasContracts {
+		backendFiles[filepath.Join(contractsDir, "I"+a.PluginId+"Capability.cs")] = "templates/backend/Capability.cs.tmpl"
 	}
 
 	for dest, tmpl := range backendFiles {

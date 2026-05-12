@@ -10,6 +10,10 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './PluginApp': './src/PluginApp.tsx',
+        {{if .HasContracts}}'./Shared': './src/components/shared/index.ts',{{end}}
+      },
+      remotes: {
+        // Las dependencias añadidas vía 'vtx add' aparecerán aquí
       },
       shared: ['react', 'react-dom', 'lucide-react', '@kitdevelop-org/veritix-ui-kit'],
     }),
