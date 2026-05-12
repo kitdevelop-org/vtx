@@ -27,5 +27,13 @@
   "msg_scaffold_success": "✅ Estructura de carpetas creada exitosamente.",
   "msg_compiling_backend": "📦 Compilando backend (.NET 10)...",
   "msg_compiling_frontend": "🎨 Compilando frontend (pnpm)...",
-  "msg_generating_package": "🗜️  Generando paquete: %s..."
+  "msg_generating_package": "🗜️  Generando paquete: %s...",
+  "msg_auth_opening_browser": "Abriendo el navegador para autenticación...",
+  "msg_auth_waiting_ckm": "Esperando confirmación del CKM (Client Key Management)...",
+  "msg_auth_success": "Autenticado exitosamente",
+  "msg_auth_keys_downloaded": "Llaves de firma descargadas en ~/.vtx/",
+  "msg_cert_signing": "Firmando paquete",
+  "msg_cert_signed_success": "Firma RSA generada e incrustada exitosamente",
+  "msg_cert_registering_ckm": "Registrando fingerprint en el Transparency Log del CKM...",
+  "msg_cert_ready": "Plugin listo para publicación"
 }

@@ -26,6 +26,14 @@
   "msg_creating_plugin": "🚀 Creating plugin: %s...",
   "msg_scaffold_success": "✅ Folder structure created successfully.",
   "msg_compiling_backend": "📦 Compiling backend (.NET 10)...",
-  "msg_compiling_frontend": "🎨 Compiling frontend (pnpm)...",
-  "msg_generating_package": "🗜️  Generating package: %s..."
+  "msg_compiling_frontend": "🎨 Compilando frontend (pnpm)...",
+  "msg_generating_package": "🗜️  Generating package: %s...",
+  "msg_auth_opening_browser": "Opening browser for authentication...",
+  "msg_auth_waiting_ckm": "Waiting for CKM (Client Key Management) confirmation...",
+  "msg_auth_success": "Successfully authenticated",
+  "msg_auth_keys_downloaded": "Signing keys downloaded to ~/.vtx/",
+  "msg_cert_signing": "Signing package",
+  "msg_cert_signed_success": "RSA signature generated and embedded successfully",
+  "msg_cert_registering_ckm": "Registering fingerprint in CKM Transparency Log...",
+  "msg_cert_ready": "Plugin ready for publication"
 }

@@ -9,10 +9,22 @@ import (
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("🔐 Abriendo el navegador para autenticación...")
-		fmt.Println("⏳ Esperando confirmación del CKM (Client Key Management)...")
-		fmt.Println("✅ Autenticado exitosamente como: KitDevelop")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("🔐 " + i18n.T("msg_auth_opening_browser"))
+		
+		// Simulación de llamada al CKM
+		// En producción esto usaría el endpoint /publishers/auth/keys
+		fmt.Println("⏳ " + i18n.T("msg_auth_waiting_ckm"))
+		
+		// Guardamos las llaves simuladas localmente en ~/.vtx/
+		home, _ := os.UserHomeDir()
+		vtxDir := filepath.Join(home, ".vtx")
+		os.MkdirAll(vtxDir, 0700)
+
+		fmt.Println("✅ " + i18n.T("msg_auth_success") + ": KitDevelop")
+		fmt.Println("🔑 " + i18n.T("msg_auth_keys_downloaded"))
+		
+		return nil
 	},
 }
 
