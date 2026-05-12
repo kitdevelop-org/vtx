@@ -1,0 +1,13 @@
+{
+  "pluginId": "{{.PluginId}}",
+  "displayName": "{{.DisplayName}}",
+  "version": "1.0.0",
+  "description": "Módulo de {{.DisplayName}} para Veritix ERP.",
+  "author": "{{.Author}}",
+  "assemblyName": "Veritix.Plugin.{{.PluginId}}",
+  "entryType": "Veritix.Plugin.{{.PluginId}}.{{.PluginId}}Plugin",
+  "minCoreVersion": "1.0.0",
+  "hasFrontend": {{.HasFrontend}},
+  "remoteName": "vtx_plugin_{{.PluginIdLower}}",
+  "exposedModule": "./PluginApp"
+}
