@@ -1,0 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Veritix.Plugin.SDK.Database;
+
+namespace Veritix.Plugin.{{.PluginId}}.Data;
+
+public class {{.PluginId}}Migrator(IDbContextFactory<{{.PluginId}}DbContext> contextFactory) 
+    : PluginMigratorBase<{{.PluginId}}DbContext>(contextFactory)
+{
+    // Esta clase se encarga de ejecutar las migraciones del plugin 
+    // en el esquema correcto del tenant.
+}

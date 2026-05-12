@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Veritix.Plugin.SDK;
+using Veritix.Plugin.SDK.Database;
+using Veritix.Plugin.{{.PluginId}}.Services;
+using Veritix.Plugin.{{.PluginId}}.Data;
 
 namespace Veritix.Plugin.{{.PluginId}};
 
@@ -12,20 +16,33 @@ public class {{.PluginId}}Plugin : PluginBase
     public override string Version => "1.0.0";
     public override string Description => "Módulo de {{.DisplayName}} para Veritix ERP.";
     public override string Author => "{{.Author}}";
+    public override string? Icon => "Box";
 
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        // Registrar servicios específicos del plugin
+        // 1. Registrar Contexto de Base de Datos (PostgreSQL)
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        services.AddDbContextFactory<{{.PluginId}}DbContext>(options =>
+            options.UseNpgsql(connectionString));
+
+        // 2. Registrar Migrador
+        services.AddScoped<IPluginMigrator, {{.PluginId}}Migrator>();
+
+        // 3. Registrar Servicios de Negocio
+        services.AddScoped<I{{.PluginId}}Service, {{.PluginId}}Service>();
     }
 
     public override void MapEndpoints(IApplicationBuilder app)
     {
-        // Mapear rutas de API (Minimal APIs o controladores)
+        // El Core de Veritix mapeará automáticamente los controladores 
+        // definidos en el namespace de este plugin.
     }
 
-    public override Task OnInstalledAsync(Guid tenantId, CancellationToken ct = default)
+    public override async Task OnInstalledAsync(Guid tenantId, CancellationToken ct = default)
     {
-        // Lógica de instalación (migraciones, seed data)
-        return base.OnInstalledAsync(tenantId, ct);
+        // Ejecutar migraciones automáticamente al instalar
+        // Esto creará el esquema del plugin para el tenant
+        await base.OnInstalledAsync(tenantId, ct);
     }
 }
+

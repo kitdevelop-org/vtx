@@ -1,0 +1,11 @@
+namespace Veritix.Plugin.{{.PluginId}}.Services;
+
+public interface I{{.PluginId}}Service
+{
+    string GetHello();
+}
+
+public class {{.PluginId}}Service : I{{.PluginId}}Service
+{
+    public string GetHello() => "Hola desde el servicio del plugin {{.DisplayName}}";
+}

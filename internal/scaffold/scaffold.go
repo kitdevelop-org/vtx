@@ -48,6 +48,7 @@ func Generate(a *ui.NewPluginAnswers) error {
 		pluginDir,
 		filepath.Join(pluginDir, "Controllers"),
 		filepath.Join(pluginDir, "Services"),
+		filepath.Join(pluginDir, "Data"),
 		contractsDir,
 	}
 
@@ -71,14 +72,31 @@ func Generate(a *ui.NewPluginAnswers) error {
 	data.ItemGroup = fmt.Sprintf(`
   <ItemGroup>
     <ProjectReference Include="..\Veritix.Plugin.%s.Contracts\Veritix.Plugin.%s.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
   </ItemGroup>`, a.PluginId, a.PluginId)
 	if err := render(filepath.Join(pluginDir, "Veritix.Plugin."+a.PluginId+".csproj"), "templates/backend/csproj.tmpl", data); err != nil {
 		return err
 	}
 
-	// 3. Generar PluginBase.cs
-	if err := render(filepath.Join(pluginDir, a.PluginId+"Plugin.cs"), "templates/backend/PluginBase.cs.tmpl", data); err != nil {
-		return err
+	// 3. Generar Código C#
+	backendFiles := map[string]string{
+		filepath.Join(pluginDir, a.PluginId+"Plugin.cs"):            "templates/backend/PluginBase.cs.tmpl",
+		filepath.Join(pluginDir, "Controllers", a.PluginId+"Controller.cs"): "templates/backend/Controller.cs.tmpl",
+		filepath.Join(pluginDir, "Services", "I"+a.PluginId+"Service.cs"):   "templates/backend/Service.cs.tmpl", // Contiene interfaz y clase por simplicidad
+		filepath.Join(pluginDir, "Data", a.PluginId+"DbContext.cs"):         "templates/backend/DbContext.cs.tmpl",
+		filepath.Join(pluginDir, "Data", a.PluginId+"Migrator.cs"):          "templates/backend/Migrator.cs.tmpl",
+	}
+
+	for dest, tmpl := range backendFiles {
+		if err := render(dest, tmpl, data); err != nil {
+			return fmt.Errorf("error generando archivo backend %s: %w", dest, err)
+		}
 	}
 
 	// 4. Generar vtx.config.json

@@ -1,0 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Veritix.Plugin.SDK.Database;
+
+namespace Veritix.Plugin.{{.PluginId}}.Data;
+
+public class {{.PluginId}}DbContext(DbContextOptions<{{.PluginId}}DbContext> options) 
+    : DbContext(options), IPluginDbContext
+{
+    // Define tus DbSets aquí
+    // public DbSet<MyEntity> Entities => Set<MyEntity>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        // Configuración de Fluent API
+    }
+}

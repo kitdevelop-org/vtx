@@ -1,0 +1,13 @@
+{
+  "pluginId": "BackendPro",
+  "displayName": "Backend Pro",
+  "version": "1.0.0",
+  "description": "Módulo de Backend Pro para Veritix ERP.",
+  "author": "FullStackers",
+  "assemblyName": "Veritix.Plugin.BackendPro",
+  "entryType": "Veritix.Plugin.BackendPro.BackendProPlugin",
+  "minCoreVersion": "1.0.0",
+  "hasFrontend": true,
+  "remoteName": "vtx_plugin_backendpro",
+  "exposedModule": "./PluginApp"
+}

@@ -1,0 +1,23 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    federation({
+      name: 'vtx_plugin_backendpro',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './PluginApp': './src/PluginApp.tsx',
+      },
+      shared: ['react', 'react-dom', 'lucide-react', '@kitdevelop-org/veritix-ui-kit'],
+    }),
+  ],
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+  },
+});

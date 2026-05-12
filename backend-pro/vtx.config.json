@@ -1,0 +1,13 @@
+{
+  "pluginId": "BackendPro",
+  "version": "1.0.0",
+  "author": "FullStackers",
+  "country": "DO",
+  "hasFrontend": true,
+  "backend": {
+    "project": "./Veritix.Plugin.BackendPro/Veritix.Plugin.BackendPro.csproj"
+  },
+  "frontend": {
+    "root": "./Veritix.Plugin.BackendPro/ClientApp"
+  }
+}

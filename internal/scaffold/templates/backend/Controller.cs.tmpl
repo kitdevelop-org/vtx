@@ -1,0 +1,19 @@
+using Microsoft.AspNetCore.Mvc;
+using Veritix.Plugin.SDK;
+
+namespace Veritix.Plugin.{{.PluginId}}.Controllers;
+
+[ApiController]
+[Route("api/{{.PluginIdLower}}")]
+public class {{.PluginId}}Controller : ControllerBase
+{
+    [HttpGet("status")]
+    public IActionResult GetStatus()
+    {
+        return Ok(new { 
+            status = "Operational", 
+            plugin = "{{.DisplayName}}",
+            timestamp = DateTime.UtcNow 
+        });
+    }
+}
