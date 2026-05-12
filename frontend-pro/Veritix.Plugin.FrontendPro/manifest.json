@@ -1,0 +1,13 @@
+{
+  "pluginId": "FrontendPro",
+  "displayName": "Frontend Pro",
+  "version": "1.0.0",
+  "description": "Módulo de Frontend Pro para Veritix ERP.",
+  "author": "WebDevs",
+  "assemblyName": "Veritix.Plugin.FrontendPro",
+  "entryType": "Veritix.Plugin.FrontendPro.FrontendProPlugin",
+  "minCoreVersion": "1.0.0",
+  "hasFrontend": true,
+  "remoteName": "vtx_plugin_frontendpro",
+  "exposedModule": "./PluginApp"
+}

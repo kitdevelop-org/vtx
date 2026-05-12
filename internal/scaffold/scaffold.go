@@ -94,12 +94,24 @@ func Generate(a *ui.NewPluginAnswers) error {
 	// 6. Generar Frontend (si aplica)
 	if a.HasFrontend {
 		clientAppDir := filepath.Join(pluginDir, "ClientApp")
-		if err := render(filepath.Join(clientAppDir, "src", "PluginApp.tsx"), "templates/frontend/PluginApp.tsx.tmpl", data); err != nil {
-			return err
+		
+		// Archivos base del frontend
+		files := map[string]string{
+			filepath.Join(clientAppDir, "index.html"):          "templates/frontend/index.html.tmpl",
+			filepath.Join(clientAppDir, "package.json"):        "templates/frontend/package.json.tmpl",
+			filepath.Join(clientAppDir, "vite.config.ts"):      "templates/frontend/vite.config.ts.tmpl",
+			filepath.Join(clientAppDir, "tsconfig.json"):       "templates/frontend/tsconfig.json.tmpl",
+			filepath.Join(clientAppDir, "tailwind.config.js"):  "templates/frontend/tailwind.config.js.tmpl",
+			filepath.Join(clientAppDir, "postcss.config.js"):   "templates/frontend/postcss.config.js.tmpl",
+			filepath.Join(clientAppDir, "src", "main.tsx"):      "templates/frontend/main.tsx.tmpl",
+			filepath.Join(clientAppDir, "src", "index.css"):     "templates/frontend/index.css.tmpl",
+			filepath.Join(clientAppDir, "src", "PluginApp.tsx"): "templates/frontend/PluginApp.tsx.tmpl",
 		}
-		// Nota: Para package.json podríamos usar otra plantilla o mantener el string format
-		if err := createFrontendPackageJson(clientAppDir, a); err != nil {
-			return err
+
+		for dest, tmpl := range files {
+			if err := render(dest, tmpl, data); err != nil {
+				return fmt.Errorf("error generando archivo frontend %s: %w", dest, err)
+			}
 		}
 	}
 
@@ -121,7 +133,6 @@ func render(destPath, tmplPath string, data interface{}) error {
 	return tmpl.Execute(f, data)
 }
 
-// Estos dos podrían moverse a plantillas también para ser 100% consistentes
 func createNugetConfig(dir string) error {
 	path := filepath.Join(dir, "nuget.config")
 	content := `<?xml version="1.0" encoding="utf-8"?>
@@ -138,36 +149,5 @@ func createNugetConfig(dir string) error {
     </kitdevelop>
   </packageSourceCredentials>
 </configuration>`
-	return os.WriteFile(path, []byte(content), 0644)
-}
-
-func createFrontendPackageJson(dir string, a *ui.NewPluginAnswers) error {
-	path := filepath.Join(dir, "package.json")
-	content := fmt.Sprintf(`{
-  "name": "@plugins/%s-ui",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "lucide-react": "^0.450.0",
-    "@kitdevelop-org/veritix-ui-kit": "^0.1.0"
-  },
-  "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.3.0",
-    "typescript": "^5.6.0",
-    "vite": "^6.0.0",
-    "tailwindcss": "^3.4.0",
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0"
-  }
-}`, strings.ToLower(a.PluginId))
 	return os.WriteFile(path, []byte(content), 0644)
 }

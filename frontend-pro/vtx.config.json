@@ -1,0 +1,13 @@
+{
+  "pluginId": "FrontendPro",
+  "version": "1.0.0",
+  "author": "WebDevs",
+  "country": "MX",
+  "hasFrontend": true,
+  "backend": {
+    "project": "./Veritix.Plugin.FrontendPro/Veritix.Plugin.FrontendPro.csproj"
+  },
+  "frontend": {
+    "root": "./Veritix.Plugin.FrontendPro/ClientApp"
+  }
+}
